@@ -86,7 +86,3 @@ O back-end está configurado para aceitar requisições de origens específicas 
 ## 👥 Desenvolvedor
 
 **Matheus Correia da Silva**
-
-```
-
-```
