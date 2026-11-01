@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terê Verde Online - Painel do Administrador</title>
+    <link rel="stylesheet" href="CSS/style-adm.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html">
+                <img src="img/tere verde sem fundo.png" alt="Logo Terê Verde Online" class="logo">
+            </a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo">
+                <h2>Painel de Controle</h2>
+            </div>
+        </section>
+
+        <section class="admin-painel-adm">
+            <div class="conteudo" style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                
+                <h3>Bem-vindo, Administrador!</h3>
+                <p class="admin-painel-subtitulo">Selecione uma opção abaixo para gerenciar o conteúdo do site.</p>
+
+                <div class="admin-opcoes-grade">
+                    
+                    <a href="admin-eventos.html" id="card-eventos" class="admin-opcoes-caixa caixa">
+                        <h4>📅 Gerenciar Eventos</h4>
+                        <p>Adicionar, editar ou remover eventos e festivais.</p>
+                    </a>
+
+                    <a href="admin-condicoes.html" id="card-condicoes" class="admin-opcoes-caixa caixa">
+                        <h4>🏞️ Atualizar Condições</h4>
+                        <p>Adicionar, remover ou atualizar trilhas e cachoeiras.</p>
+                    </a>
+
+                    <a href="admin-atualizacoes.html" id="card-atualizacoes" class="admin-opcoes-caixa caixa">
+                        <h4>📰 Publicar Atualizações</h4>
+                        <p>Postar, editar ou remover notícias da home.</p>
+                    </a>
+
+                    <a href="admin-admins.html" id="card-admins" class="admin-opcoes-caixa caixa">
+                        <h4>👥 Gerenciar Administradores</h4>
+                        <p>Adicionar ou remover usuários do painel.</p>
+                    </a>
+
+                    <a href="#" onclick="encerrarSessaoAdmin(); return false;" id="btn-sair" class="admin-opcoes-caixa caixa">
+                        <h4>❌ Sair</h4>
+                        <p>Deslogar e voltar ao site principal.</p>
+                    </a>
+
+                </div>
+
+                <!-- Seção para Gerenciar Administradores (Apenas Master) -->
+                <div id="secao-admins" class="admin-form-caixa" style="display: none; margin-top: 30px; text-align: left;">
+                    <h3>👥 Gerenciar Usuários Administradores</h3>
+                    <p style="margin-bottom: 15px;">Adicione novos administradores ou remova os existentes:</p>
+                    
+                    <form id="form-novo-admin" style="background: #f4f6f4; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+                        <h4 style="margin-bottom: 10px;">Criar Novo Admin</h4>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Nome de Usuário:</label>
+                            <input type="text" id="novo-admin-user" placeholder="Ex: joao.guia" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Senha de Acesso:</label>
+                            <input type="password" id="novo-admin-senha" placeholder="Digite uma senha" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <button type="submit" class="botao" style="margin-top: 12px; background: #2c3e50; border: none; color: #fff; padding: 10px 15px; cursor: pointer; border-radius: 4px;">Criar Usuário</button>
+                    </form>
+
+                    <h4>Administradores Cadastrados</h4>
+                    <div id="lista-admins-painel" style="margin-top: 15px;">Carregando usuários...</div>
+                </div>
+
+                <!-- Seção para Gerenciar Trilhas e Cachoeiras -->
+                <div id="secao-condicoes" class="admin-form-caixa" style="display: none; margin-top: 30px; text-align: left;">
+                    <h3>🏞️ Gerenciar Trilhas e Cachoeiras</h3>
+                    <p style="margin-bottom: 15px;">Cadastre novas atrações definindo se é uma Trilha ou Cachoeira:</p>
+                    
+                    <form id="form-novo-atrativo" style="background: #f4f6f4; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+                        <h4 style="margin-bottom: 10px;">Adicionar Novo Atrativo</h4>
+                        
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Tipo de Atrativo:</label>
+                            <select id="novo-tipo" style="width: 100%; padding: 8px;">
+                                <option value="trilha">Trilha</option>
+                                <option value="cachoeira">Cachoeira</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Nome do Atrativo:</label>
+                            <input type="text" id="novo-nome" placeholder="Ex: Trilha da Pedra Bonita" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Parque:</label>
+                            <select id="novo-parque" style="width: 100%; padding: 8px;">
+                                <option value="PARNASO">PARNASO</option>
+                                <option value="PETP">PETP</option>
+                                <option value="PNMMT">PNMMT</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Status Inicial:</label>
+                            <select id="novo-status" style="width: 100%; padding: 8px;">
+                                <option value="aberto">🟢 Aberto</option>
+                                <option value="fechado">🔴 Fechado</option>
+                                <option value="atencao">🟡 Atenção</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Descrição / Detalhes:</label>
+                            <input type="text" id="novo-desc" placeholder="Ex: ABERTA / 11 km" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <button type="submit" class="botao" style="margin-top: 12px; background: #1a9c3d; border: none; color: #fff; padding: 10px 15px; cursor: pointer; border-radius: 4px;">Cadastrar Atrativo</button>
+                    </form>
+
+                    <h4>Atrativos Cadastrados</h4>
+                    <div id="lista-condicoes-painel" style="margin-top: 15px;">Carregando atrativos...</div>
+                </div>
+
+                <!-- Seção para Publicar e Editar Atualizações -->
+                <div id="secao-atualizacoes" class="admin-form-caixa" style="display: none; margin-top: 30px; text-align: left;">
+                    <h3>📰 Publicar e Gerenciar Notícias</h3>
+                    <p style="margin-bottom: 15px;">Cadastre ou edite avisos da página inicial:</p>
+                    
+                    <form id="form-nova-atualizacao" style="background: #f4f6f4; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Data (ex: 19/10/2025):</label>
+                            <input type="text" id="upd-data" placeholder="DD/MM/AAAA" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <div class="form-grupo" style="margin-top: 10px;">
+                            <label>Texto da Notícia:</label>
+                            <textarea id="upd-texto" rows="3" placeholder="Ex: Trilha reaberta." required style="width: 100%; padding: 8px;"></textarea>
+                        </div>
+                        <button type="submit" class="botao" style="margin-top: 12px; background: #1a9c3d; border: none; color: #fff; padding: 10px 15px; cursor: pointer; border-radius: 4px;">Publicar Atualização</button>
+                    </form>
+
+                    <h4>Atualizações Publicadas</h4>
+                    <div id="lista-atualizacoes-painel" style="margin-top: 15px;">Carregando atualizações...</div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 12px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold;">Sair</button>
+</div>
+
+    <!-- SESSÃO DE 15 MINUTOS -->
+    <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000; 
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const isMaster = localStorage.getItem("isMaster") === "true";
+            if (!isMaster) {
+                const cardEventos = document.getElementById("card-eventos");
+                const btnAdmins = document.getElementById("btn-admins");
+                if (cardEventos) cardEventos.style.display = "none";
+                if (btnAdmins) btnAdmins.style.display = "none";
+            }
+        });
+
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+            if (!token || !timestampSessao) {
+                if (barra) barra.style.setProperty('display', 'none', 'important');
+                window.location.href = "admin-login.html";
+                return;
+            }
+            const agora = new Date().getTime();
+            const tempoRestante = TEMPO_SESSAO_MS - (agora - parseInt(timestampSessao));
+            if (tempoRestante <= 0) {
+                encerrarSessaoAdmin();
+                alert("Sua sessão expirou.");
+                window.location.href = "admin-login.html";
+            } else {
+                if (barra) barra.style.setProperty('display', 'flex', 'important');
+                const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                const cronometroEl = document.getElementById("cronometro-sessao");
+                if (cronometroEl) cronometroEl.textContent = `(${minutos}:${segundos < 10 ? '0' : ''}${segundos})`;
+            }
+        }
+        function encerrarSessaoAdmin() {
+            localStorage.clear();
+            window.location.href = "admin-login.html";
+        }
+        verificarSessaoGlobal();
+        setInterval(verificarSessaoGlobal, 1000);
+    </script>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+        const token = localStorage.getItem("tokenAdmin") || "token-seguro-admin-tereverde-2026";
+
+        const secaoCondicoes = document.getElementById("secao-condicoes");
+        const secaoAtualizacoes = document.getElementById("secao-atualizacoes");
+        const secaoAdmins = document.getElementById("secao-admins");
+
+        function ocultarTodasSecoes() {
+            if (secaoCondicoes) secaoCondicoes.style.display = "none";
+            if (secaoAtualizacoes) secaoAtualizacoes.style.display = "none";
+            if (secaoAdmins) secaoAdmins.style.display = "none";
+        }
+
+        document.getElementById("btn-condicoes").addEventListener("click", (e) => {
+            e.preventDefault();
+            ocultarTodasSecoes();
+            secaoCondicoes.style.display = "block";
+            carregarCondicoes();
+        });
+
+        document.getElementById("btn-atualizacoes").addEventListener("click", (e) => {
+            e.preventDefault();
+            ocultarTodasSecoes();
+            secaoAtualizacoes.style.display = "block";
+            carregarAtualizacoesAdmin();
+        });
+
+        const btnAdmins = document.getElementById("btn-admins");
+        if (btnAdmins) {
+            btnAdmins.addEventListener("click", (e) => {
+                e.preventDefault();
+                ocultarTodasSecoes();
+                secaoAdmins.style.display = "block";
+                carregarAdminsMaster();
+            });
+        }
+
+        // GERENCIAR ADMINS (APENAS MASTER)
+        async function carregarAdminsMaster() {
+            const container = document.getElementById("lista-admins-painel");
+            try {
+                const res = await fetch(`${API_URL}/admins/`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const data = await res.json();
+                container.innerHTML = "";
+
+                if (!data.admins || data.admins.length === 0) {
+                    container.innerHTML = "<p>Nenhum administrador extra cadastrado.</p>";
+                    return;
+                }
+
+                data.admins.forEach(a => {
+                    const div = document.createElement("div");
+                    div.style.marginBottom = "10px";
+                    div.style.padding = "8px";
+                    div.style.background = "#fff";
+                    div.style.display = "flex";
+                    div.style.justifyContent = "space-between";
+                    div.style.alignItems = "center";
+                    div.style.border = "1px solid #ddd";
+
+                    const labelTipo = a.is_master ? '(Admin Principal)' : '(Usuário Comum)';
+                    const identificador = a.id || a.username;
+
+                    div.innerHTML = `
+                        <span><strong>${a.username}</strong> ${labelTipo}</span>
+                        ${!a.is_master ? `<button type="button" onclick="excluirAdmin('${identificador}')" style="background: #c0392b; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Excluir</button>` : ''}
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (e) {
+                container.innerHTML = "<p style='color: red;'>Erro ao carregar administradores.</p>";
+            }
+        }
+
+        document.getElementById("form-novo-admin").addEventListener("submit", async (e) => {
+            e.preventDefault(); // Impede o recarregamento da página
+            const username = document.getElementById("novo-admin-user").value.trim();
+            const password = document.getElementById("novo-admin-senha").value.trim();
+
+            try {
+                const res = await fetch(`${API_URL}/admins/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.mensagem); // Mensagem de sucesso
+                    document.getElementById("form-novo-admin").reset();
+                    carregarAdminsMaster(); // Atualiza a lista na mesma aba
+                } else {
+                    alert(data.erro || "Erro ao criar usuário.");
+                }
+            } catch (e) {
+                alert("Erro de conexão.");
+            }
+        });
+
+        async function excluirAdmin(id) {
+            if (!confirm("Deseja realmente remover este administrador?")) return;
+            try {
+                const res = await fetch(`${API_URL}/admins/`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ id })
+                });
+                if (res.ok) {
+                    alert("Removido com sucesso!");
+                    carregarAdminsMaster(); // Atualiza a lista na mesma aba
+                } else {
+                    const data = await res.json();
+                    alert(data.erro || "Erro ao excluir.");
+                }
+            } catch (e) {
+                alert("Erro de conexão.");
+            }
+        }
+
+        // ATRATIVOS
+        async function carregarCondicoes() {
+            const container = document.getElementById("lista-condicoes-painel");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                const dados = await res.json();
+                container.innerHTML = "";
+
+                if (!dados.condicoes || dados.condicoes.length === 0) {
+                    container.innerHTML = "<p>Nenhum atrativo cadastrado.</p>";
+                    return;
+                }
+
+                dados.condicoes.forEach(c => {
+                    const tipoLabel = c.tipo === "cachoeira" ? "🌊 Cachoeira" : "🥾 Trilha";
+                    const div = document.createElement("div");
+                    div.className = "form-grupo";
+                    div.style.marginBottom = "15px";
+                    div.style.paddingBottom = "12px";
+                    div.style.borderBottom = "1px solid #ddd";
+                    div.innerHTML = `
+                        <label><strong>[${tipoLabel} - ${c.parque}] ${c.nome}</strong></label>
+                        <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; align-items: center;">
+                            <select id="status-${c.id}" style="padding: 8px; flex: 1;">
+                                <option value="aberto" ${c.status === 'aberto' ? 'selected' : ''}>🟢 Aberta</option>
+                                <option value="fechado" ${c.status === 'fechado' ? 'selected' : ''}>🔴 Fechada</option>
+                                <option value="atencao" ${c.status === 'atencao' ? 'selected' : ''}>🟡 Atenção</option>
+                            </select>
+                            <input type="text" id="desc-${c.id}" value="${c.descricao}" style="padding: 8px; flex: 2;">
+                            <button type="button" class="botao" onclick="salvarCondicao('${c.id}')" style="padding: 8px 14px; cursor: pointer;">Salvar</button>
+                            <button type="button" onclick="excluirCondicao('${c.id}')" style="background: #c0392b; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (erro) {
+                container.innerHTML = "<p style='color: red;'>Erro ao conectar ao Back-End.</p>";
+            }
+        }
+
+        document.getElementById("form-novo-atrativo").addEventListener("submit", async (e) => {
+            e.preventDefault(); // Impede o recarregamento da página
+            const novo = {
+                tipo: document.getElementById("novo-tipo").value,
+                parque: document.getElementById("novo-parque").value,
+                nome: document.getElementById("novo-nome").value.trim(),
+                status: document.getElementById("novo-status").value,
+                descricao: document.getElementById("novo-desc").value.trim()
+            };
+
+            const res = await fetch(`${API_URL}/condicoes/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify(novo)
+            });
+
+            if (res.ok) {
+                alert("Atrativo cadastrado com sucesso!");
+                document.getElementById("form-novo-atrativo").reset();
+                carregarCondicoes(); // Mantém a aba aberta e recarrega os dados
+            } else {
+                alert("Erro ao cadastrar atrativo.");
+            }
+        });
+
+        async function salvarCondicao(id) {
+            const status = document.getElementById(`status-${id}`).value;
+            const descricao = document.getElementById(`desc-${id}`).value;
+
+            try {
+                const res = await fetch(`${API_URL}/condicoes/`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ id, status, descricao })
+                });
+
+                if (res.ok) {
+                    alert("Condição atualizada com sucesso!");
+                    carregarCondicoes(); // Mantém na mesma aba
+                } else {
+                    const err = await res.json();
+                    alert(err.erro || "Erro ao salvar alteração.");
+                }
+            } catch (e) {
+                alert("Erro de conexão ao salvar.");
+            }
+        }
+
+        async function excluirCondicao(id) {
+            if (!confirm("Deseja realmente excluir este atrativo?")) return;
+            try {
+                const res = await fetch(`${API_URL}/condicoes/`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ id })
+                });
+
+                if (res.ok) {
+                    alert("Atrativo excluído com sucesso!");
+                    carregarCondicoes(); // Mantém na mesma aba
+                } else {
+                    const err = await res.json();
+                    alert(err.erro || "Erro ao excluir atrativo.");
+                }
+            } catch (e) {
+                alert("Erro de conexão ao excluir.");
+            }
+        }
+
+        // ATUALIZAÇÕES
+        async function carregarAtualizacoesAdmin() {
+            const container = document.getElementById("lista-atualizacoes-painel");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                const dados = await res.json();
+                container.innerHTML = "";
+
+                if (!dados.atualizacoes || dados.atualizacoes.length === 0) {
+                    container.innerHTML = "<p>Nenhuma atualização publicada.</p>";
+                    return;
+                }
+
+                dados.atualizacoes.forEach(u => {
+                    const div = document.createElement("div");
+                    div.className = "form-grupo";
+                    div.style.marginBottom = "15px";
+                    div.style.paddingBottom = "12px";
+                    div.style.borderBottom = "1px solid #ddd";
+                    div.innerHTML = `
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="upd-data-${u.id}" value="${u.data}" style="padding: 8px; flex: 1;" placeholder="Data">
+                            <input type="text" id="upd-texto-${u.id}" value="${u.texto}" style="padding: 8px; flex: 3;" placeholder="Texto">
+                            <button type="button" class="botao" onclick="salvarAtualizacao('${u.id}')" style="padding: 8px 14px; cursor: pointer;">Salvar</button>
+                            <button type="button" onclick="excluirAtualizacao('${u.id}')" style="background: #c0392b; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (e) {
+                container.innerHTML = "<p style='color: red;'>Erro ao carregar atualizações.</p>";
+            }
+        }
+
+        document.getElementById("form-nova-atualizacao").addEventListener("submit", async (e) => {
+            e.preventDefault(); // Impede o recarregamento da página
+            const nova = {
+                data: document.getElementById("upd-data").value.trim(),
+                texto: document.getElementById("upd-texto").value.trim()
+            };
+
+            const res = await fetch(`${API_URL}/atualizacoes/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify(nova)
+            });
+
+            if (res.ok) {
+                alert("Atualização publicada com sucesso!");
+                document.getElementById("form-nova-atualizacao").reset();
+                carregarAtualizacoesAdmin(); // Mantém na mesma aba
+            } else {
+                alert("Erro ao publicar atualização.");
+            }
+        });
+
+        async function salvarAtualizacao(id) {
+            const data = document.getElementById(`upd-data-${id}`).value;
+            const texto = document.getElementById(`upd-texto-${id}`).value;
+
+            try {
+                const res = await fetch(`${API_URL}/atualizacoes/`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ id, data, texto })
+                });
+
+                if (res.ok) {
+                    alert("Atualização editada com sucesso!");
+                    carregarAtualizacoesAdmin(); // Mantém na mesma aba
+                } else {
+                    const err = await res.json();
+                    alert(err.erro || "Erro ao editar atualização.");
+                }
+            } catch (e) {
+                alert("Erro de conexão ao salvar atualização.");
+            }
+        }
+
+        async function excluirAtualizacao(id) {
+            if (!confirm("Deseja realmente remover esta atualização?")) return;
+
+            try {
+                const res = await fetch(`${API_URL}/atualizacoes/`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ id })
+                });
+
+                if (res.ok) {
+                    alert("Atualização removida com sucesso!");
+                    carregarAtualizacoesAdmin(); // Mantém na mesma aba
+                } else {
+                    const err = await res.json();
+                    alert(err.erro || "Erro ao excluir atualização.");
+                }
+            } catch (e) {
+                alert("Erro de conexão ao excluir atualização.");
+            }
+        }
+    </script>
+</body>
+</html>

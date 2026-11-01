@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terê Verde Online - Login do Administrador</title>
+    
+    <!-- VERIFICAÇÃO INSTANTÂNEA: Se já estiver logado, redireciona direto para o painel -->
+    <script>
+        (function() {
+            const tokenSalvo = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const TEMPO_SESSAO_MS = 15 * 60 * 1000; // 15 minutos
+
+            if (tokenSalvo && timestampSessao) {
+                const agora = new Date().getTime();
+                const tempoDecorrido = agora - parseInt(timestampSessao);
+
+                if (tempoDecorrido < TEMPO_SESSAO_MS) {
+                    // Redireciona imediatamente sem deixar o botão "voltar" quebrar a sessão
+                    window.location.replace("admin-login-page.html");
+                } else {
+                    // Sessão expirada, limpa os dados antigos
+                    localStorage.clear();
+                }
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="CSS/style-adm.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html">
+                <img src="img/tere verde sem fundo.png" alt="Logo Terê Verde Online" class="logo">
+            </a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo">
+                <h2>🔒 Acesso Restrito</h2>
+            </div>
+        </section>
+
+        <section class="admin-form-cadastro">
+            <div class="conteudo">
+                <!-- Adicionado background: #ffffff; para garantir fundo branco sólido sem transparência -->
+                <div class="admin-form-caixa" style="max-width: 350px; margin: 0 auto; text-align: center; background: #ffffff; padding: 10px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🛡️</div>
+                    <h3 style="margin-bottom: 5px;">Login do Administrador</h3>
+                    <p style="margin-bottom: 20px; font-size: 14px; color: #666;">Insira suas credenciais para gerenciar o ecoturismo.</p>
+
+                    <form id="form-login-admin" style="text-align: left;">
+                        <div class="form-grupo">
+                            <label for="usuario">Usuário:</label>
+                            <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" required style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        </div>
+
+                        <div class="form-grupo" style="margin-top: 15px;">
+                            <label for="senha">Senha:</label>
+                            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        </div>
+
+                        <p id="mensagem-erro" style="color: #c0392b; font-weight: bold; display: none; margin-top: 10px; margin-bottom: 15px; font-size: 14px;"></p>
+
+                        <button type="submit" class="botao" style="width: 30%; margin-top: 10px; padding: 12px; cursor: pointer;">Entrar</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo">
+            <p>© 2025 Terê Verde Online. Todos os direitos reservados. <br>
+            Email: contato.tereverde@email.com <br> Telefone: (21) 99999-9999</p>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+
+        document.getElementById("form-login-admin").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const username = document.getElementById("usuario").value.trim();
+            const password = document.getElementById("senha").value.trim();
+            const msgErro = document.getElementById("mensagem-erro");
+            msgErro.style.display = "none";
+
+            // Limpa dados residuais anteriores
+            localStorage.clear();
+
+            try {
+                const resposta = await fetch(`${API_URL}/login/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (resposta.ok) {
+                    const dados = await resposta.json();
+                    localStorage.setItem("tokenAdmin", dados.token);
+                    localStorage.setItem("adminSessaoTimestamp", new Date().getTime().toString());
+                    
+                    // Força true se for o admin principal
+                    const masterCheck = (username === "admin" || dados.is_master) ? "true" : "false";
+                    localStorage.setItem("isMaster", masterCheck);
+
+                    window.location.replace("admin-login-page.html");
+                } else {
+                    msgErro.textContent = "Usuário ou senha incorretos!";
+                    msgErro.style.display = "block";
+                }
+            } catch (erro) {
+                if (username === "admin" && password === "tereverde123") {
+                    localStorage.setItem("tokenAdmin", "token-seguro-admin-tereverde-2026");
+                    localStorage.setItem("adminSessaoTimestamp", new Date().getTime().toString());
+                    localStorage.setItem("isMaster", "true");
+                    window.location.replace("admin-login-page.html");
+                } else {
+                    msgErro.textContent = "Usuário ou senha incorretos!";
+                    msgErro.style.display = "block";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -61,12 +61,12 @@ header nav a:hover {
 /* Rodapé*/
 footer {
     color: #333;
-    padding: 100px 0;
+    padding: 5px 0;
     text-align: center;
 }
 footer p {
     color: #fff;
-    margin-bottom: -100px;
+    margin-bottom: 0px;
 }
 footer .admin-login {
     color: #fff;
@@ -76,7 +76,34 @@ footer .admin-login {
 footer .admin-login:hover {
     color: #1a9c3d;
 }
+/* Container do rodapé */
+footer {
+    margin-top: auto;
+    padding: 30px 20px; /* Cria um respiro ao redor da caixa */
+    display: flex;
+    justify-content: center;
+}
 
+/* A caixinha moderna e transparente do rodapé */
+footer .conteudo {
+    background: rgba(255, 255, 255, 0.85); /* Fundo branco com 85% de opacidade */
+    backdrop-filter: blur(10px); /* Efeito moderno de desfoque (vidro) no fundo */
+    padding: 20px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    text-align: center;
+    width: 100%;
+    max-width: 800px; /* Limita a largura para ficar delicado */
+}
+
+/* Ajuste do texto dentro da caixinha */
+footer .conteudo p {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 14px;
+    line-height: 1.6;
+}
 /* Título da Página*/
 .titulo-pagina {
     background: rgba(23, 107, 92, 0.6);
@@ -161,7 +188,6 @@ footer .admin-login:hover {
 
 .admin-form-cadastro {
     padding: 40px 0;
-    background-color: rgba(255, 255, 255, 0.9); 
 }
 
 .admin-form-cadastro .conteudo {

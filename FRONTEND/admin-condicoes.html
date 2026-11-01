@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Condições - Terê Verde Online</title>
+    <link rel="stylesheet" href="CSS/style-adm.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html"><img src="img/tere verde sem fundo.png" alt="Logo" class="logo"></a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo"><h2>🏞️ Gerenciar Trilhas e Cachoeiras</h2></div>
+        </section>
+
+        <section class="admin-painel-adm">
+            <div class="conteudo" style="text-align: left; background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <form id="form-novo-atrativo" style="background: #f4f6f4; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+                    <h4>Adicionar Novo Atrativo</h4>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Tipo:</label>
+                        <select id="novo-tipo" style="width: 100%; padding: 8px;">
+                            <option value="trilha">Trilha</option>
+                            <option value="cachoeira">Cachoeira</option>
+                        </select>
+                    </div>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Nome:</label>
+                        <input type="text" id="novo-nome" placeholder="Ex: Trilha da Pedra Bonita" required style="width: 100%; padding: 8px;">
+                    </div>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Parque:</label>
+                        <select id="novo-parque" style="width: 100%; padding: 8px;">
+                            <option value="PARNASO">PARNASO</option>
+                            <option value="PETP">PETP</option>
+                            <option value="PNMMT">PNMMT</option>
+                        </select>
+                    </div>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Status:</label>
+                        <select id="novo-status" style="width: 100%; padding: 8px;">
+                            <option value="aberto">🟢 Aberto</option>
+                            <option value="fechado">🔴 Fechado</option>
+                            <option value="atencao">🟡 Atenção</option>
+                        </select>
+                    </div>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Descrição:</label>
+                        <input type="text" id="novo-desc" placeholder="Ex: ABERTA / 11 km" required style="width: 100%; padding: 8px;">
+                    </div>
+                    <button type="submit" class="botao" style="margin-top: 12px; background: #1a9c3d; border: none; color: #fff; padding: 10px 15px; cursor: pointer; border-radius: 4px;">Cadastrar Atrativo</button>
+                </form>
+
+                <h4>Atrativos Cadastrados</h4>
+                <div id="lista-condicoes-painel" style="margin-top: 15px;">Carregando...</div>
+
+                <!-- Botão de Voltar no Rodapé da Página -->
+                <div style="margin-top: 40px; text-align: center;">
+                    <a href="admin-login-page.html" class="botao" style="background: #2c3e50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">← Voltar ao Painel</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo">
+            <p>© 2025 Terê Verde Online. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 12px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 2px 14px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold;">Sair</button>
+</div>
+
+    <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000;
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+            if (!token || !timestampSessao) { window.location.href = "admin-login.html"; return; }
+            const agora = new Date().getTime();
+            const tempoRestante = TEMPO_SESSAO_MS - (agora - parseInt(timestampSessao));
+            if (tempoRestante <= 0) { localStorage.clear(); window.location.href = "admin-login.html"; }
+            else {
+                if (barra) barra.style.setProperty('display', 'flex', 'important');
+                const m = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                document.getElementById("cronometro-sessao").textContent = `(${m}:${s < 10 ? '0' : ''}${s})`;
+            }
+        }
+        function encerrarSessaoAdmin() { localStorage.clear(); window.location.href = "admin-login.html"; }
+        verificarSessaoGlobal();
+        setInterval(verificarSessaoGlobal, 1000);
+    </script>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+        const token = localStorage.getItem("tokenAdmin") || "";
+        if (!token) window.location.href = "admin-login.html";
+
+        async function carregarCondicoes() {
+            const container = document.getElementById("lista-condicoes-painel");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                const dados = await res.json();
+                container.innerHTML = "";
+                if (!dados.condicoes || dados.condicoes.length === 0) { container.innerHTML = "<p>Nenhum atrativo cadastrado.</p>"; return; }
+                dados.condicoes.forEach(c => {
+                    const tipoLabel = c.tipo === "cachoeira" ? "💦 Cachoeira" : "🥾 Trilha";
+                    const div = document.createElement("div");
+                    div.style.marginBottom = "15px"; div.style.paddingBottom = "12px"; div.style.borderBottom = "1px solid #ddd";
+                    div.innerHTML = `
+                        <label><strong>[${tipoLabel} - ${c.parque}] ${c.nome}</strong></label>
+                        <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; align-items: center;">
+                            <select id="status-${c.id}" style="padding: 8px; flex: 1;">
+                                <option value="aberto" ${c.status === 'aberto' ? 'selected' : ''}>🟢 Aberta</option>
+                                <option value="fechado" ${c.status === 'fechado' ? 'selected' : ''}>🔴 Fechada</option>
+                                <option value="atencao" ${c.status === 'atencao' ? 'selected' : ''}>🟡 Atenção</option>
+                            </select>
+                            <input type="text" id="desc-${c.id}" value="${c.descricao}" style="padding: 8px; flex: 2;">
+                            <button style="background: #1a9c3d; color: #ffffff; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-weight: normal; font-size: 14px;">Salvar</button>
+                            <button type="button" onclick="excluirCondicao('${c.id}')" style="background: #c0392b; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (e) { container.innerHTML = "<p style='color: red;'>Erro ao carregar dados.</p>"; }
+        }
+
+        document.getElementById("form-novo-atrativo").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const novo = {
+                tipo: document.getElementById("novo-tipo").value,
+                parque: document.getElementById("novo-parque").value,
+                nome: document.getElementById("novo-nome").value.trim(),
+                status: document.getElementById("novo-status").value,
+                descricao: document.getElementById("novo-desc").value.trim()
+            };
+            const res = await fetch(`${API_URL}/condicoes/`, {
+                method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify(novo)
+            });
+            if (res.ok) { alert("Atrativo cadastrado com sucesso!"); document.getElementById("form-novo-atrativo").reset(); carregarCondicoes(); }
+            else { alert("Erro ao cadastrar."); }
+        });
+
+        async function salvarCondicao(id) {
+            const status = document.getElementById(`status-${id}`).value;
+            const descricao = document.getElementById(`desc-${id}`).value;
+            const res = await fetch(`${API_URL}/condicoes/`, {
+                method: "PUT", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify({ id, status, descricao })
+            });
+            if (res.ok) { alert("Condição atualizada com sucesso!"); carregarCondicoes(); } else { alert("Erro ao salvar."); }
+        }
+
+        async function excluirCondicao(id) {
+            if (!confirm("Deseja realmente excluir?")) return;
+            const res = await fetch(`${API_URL}/condicoes/`, {
+                method: "DELETE", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) { alert("Excluído com sucesso!"); carregarCondicoes(); } else { alert("Erro ao excluir."); }
+        }
+
+        carregarCondicoes();
+    </script>
+</body>
+</html>

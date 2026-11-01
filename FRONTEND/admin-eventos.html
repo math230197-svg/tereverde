@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terê Verde Online - Gerenciar Eventos</title>
+    <link rel="stylesheet" href="CSS/style-adm.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html">
+                <img src="img/tere verde sem fundo.png" alt="Logo Terê Verde Online" class="logo">
+            </a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo">
+                <h2>📅 Gerenciar Eventos</h2>
+            </div>
+        </section>
+
+        <section class="admin-form-cadastro">
+            <div class="conteudo">
+                <div class="admin-form-caixa">
+                    <h3>Cadastrar Novo Evento</h3>
+                    <form id="form-cadastro-evento">
+                        
+                        <div class="form-grupo">
+                            <label for="evento-nome">Nome do Evento:</label>
+                            <input type="text" id="evento-nome" name="evento-nome" placeholder="Ex: Festival de Montanhismo" required>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label for="evento-parque">Parque:</label>
+                            <select id="evento-parque" name="evento-parque" required>
+                                <option value="" disabled selected>Selecione um parque</option>
+                                <option value="PARNASO">PARNASO</option>
+                                <option value="PETP">PETP</option>
+                                <option value="PNMMT">PNMMT</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-grupo">
+                            <label for="data-inicio">Data de Início:</label>
+                            <input type="date" id="data-inicio" name="data-inicio" required>
+                        </div>
+                        
+                        <div class="form-grupo">
+                            <label for="data-fim">Data de Fim (opcional):</label>
+                            <input type="date" id="data-fim" name="data-fim">
+                        </div>
+                        
+                        <div class="form-grupo">
+                            <label for="observacao">Descrição do Evento: </label>
+                            <textarea id="observacao" name="observacao" rows="5" placeholder="Descreva o evento, horários, vagas, etc."></textarea>
+                        </div>
+
+                        <button type="submit" class="botao">Publicar Evento</button>
+                    </form>
+
+                    <hr style="margin: 30px 0;">
+
+                    <h3>Eventos Cadastrados</h3>
+                    <ul id="lista-eventos-cadastrados" style="list-style: none; padding: 0; margin-top: 15px;">
+                        <li>Carregando eventos...</li>
+                    </ul>
+                </div>
+                <a href="admin-login-page.html" class="botao-voltar">← Voltar ao Painel</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo">
+            <p>© 2025 Terê Verde Online. 
+                Todos os direitos reservados. <br>
+                Email: contato.tereverde@email.com <br> Telefone: (21) 99999-9999</p>
+        </div>
+    </footer>
+
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 4px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
+</div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+        const token = localStorage.getItem("tokenAdmin") || "token-seguro-admin-tereverde-2026";
+
+        async function listarEventos() {
+            const ul = document.getElementById("lista-eventos-cadastrados");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                const dados = await res.json();
+                ul.innerHTML = "";
+
+                if (!dados.eventos || dados.eventos.length === 0) {
+                    ul.innerHTML = "<li>Nenhum evento cadastrado no momento.</li>";
+                    return;
+                }
+
+                dados.eventos.forEach(ev => {
+                    const li = document.createElement("li");
+                    li.style.padding = "12px";
+                    li.style.borderBottom = "1px solid #ddd";
+                    li.style.display = "flex";
+                    li.style.justifyContent = "space-between";
+                    li.style.alignItems = "center";
+                    li.innerHTML = `
+                        <div>
+                            <strong>[${ev.parque.toUpperCase()}] ${ev.titulo}</strong><br>
+                            <small>📅 ${ev.data} — ${ev.disponibilidade}</small>
+                        </div>
+                        <button type="button" onclick="excluirEvento('${ev.id}')" style="background: #c0392b; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Excluir</button>
+                    `;
+                    ul.appendChild(li);
+                });
+            } catch (erro) {
+                ul.innerHTML = "<li style='color: red;'>Servidor Back-End offline.</li>";
+            }
+        }
+
+        document.getElementById("form-cadastro-evento").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const titulo = document.getElementById("evento-nome").value;
+            const parque = document.getElementById("evento-parque").value.toUpperCase();
+            const dataInicio = document.getElementById("data-inicio").value;
+            const dataFim = document.getElementById("data-fim").value;
+            const observacao = document.getElementById("observacao").value || "Aberto ao público";
+
+            const periodoData = dataFim ? `${dataInicio} até ${dataFim}` : dataInicio;
+
+            try {
+                const res = await fetch(`${API_URL}/eventos/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        parque: parque,
+                        titulo: titulo,
+                        data: periodoData,
+                        disponibilidade: observacao
+                    })
+                });
+
+                if (res.ok) {
+                    alert("Evento publicado com sucesso!");
+                    e.target.reset();
+                    listarEventos();
+                } else {
+                    alert("Erro ao publicar o evento.");
+                }
+            } catch (erro) {
+                alert("Erro de conexão com o Back-End.");
+            }
+        });
+
+        async function excluirEvento(id) {
+            if (!confirm("Deseja realmente remover este evento?")) return;
+
+            const res = await fetch(`${API_URL}/eventos/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ id })
+            });
+
+            if (res.ok) {
+                listarEventos();
+            }
+        }
+
+        // SESSÃO DE 15 MINUTOS
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000; 
+
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+
+            if (!token || !timestampSessao) {
+                if (barra) barra.style.display = "none";
+                window.location.href = "admin-login.html";
+                return;
+            }
+
+            const agora = new Date().getTime();
+            const tempoDecorrido = agora - parseInt(timestampSessao);
+            const tempoRestante = TEMPO_SESSAO_MS - tempoDecorrido;
+
+            if (tempoRestante <= 0) {
+                encerrarSessaoAdmin();
+                alert("Sua sessão de 15 minutos expirou por inatividade.");
+                window.location.href = "admin-login.html";
+            } else {
+                if (barra) barra.style.display = "flex";
+                const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                const cronometroEl = document.getElementById("cronometro-sessao");
+                if (cronometroEl) {
+                    cronometroEl.textContent = `(${minutos}:${segundos < 10 ? '0' : ''}${segundos})`;
+                }
+            }
+        }
+
+        function encerrarSessaoAdmin() {
+            localStorage.removeItem("tokenAdmin");
+            localStorage.removeItem("adminSessaoTimestamp");
+            window.location.href = "admin-login.html";
+        }
+
+        setInterval(verificarSessaoGlobal, 1000);
+        document.addEventListener("DOMContentLoaded", () => {
+            listarEventos();
+            verificarSessaoGlobal();
+        });
+    </script>
+</body>
+</html>

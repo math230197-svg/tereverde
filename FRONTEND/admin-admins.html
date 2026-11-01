@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Administradores - Terê Verde Online</title>
+    <link rel="stylesheet" href="CSS/style-adm.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html"><img src="img/tere verde sem fundo.png" alt="Logo" class="logo"></a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo"><h2>👥 Gerenciar Usuários Administradores</h2></div>
+        </section>
+
+        <section class="admin-painel-adm">
+            <div class="conteudo" style="text-align: left; background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <form id="form-novo-admin" style="background: #f4f6f4; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+                    <h4>Criar Novo Admin</h4>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Nome de Usuário:</label>
+                        <input type="text" id="novo-admin-user" placeholder="Ex: joao.guia" required style="width: 100%; padding: 8px;">
+                    </div>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Senha de Acesso:</label>
+                        <input type="password" id="novo-admin-senha" placeholder="Digite uma senha" required style="width: 100%; padding: 8px;">
+                    </div>
+                    <button type="submit" class="botao" style="margin-top: 12px; background: #2c3e50; border: none; color: #fff; padding: 10px 15px; cursor: pointer; border-radius: 4px;">Criar Usuário</button>
+                </form>
+
+                <h4>Administradores Cadastrados</h4>
+                <div id="lista-admins-painel" style="margin-top: 15px;">Carregando...</div>
+
+                <!-- Botão de Voltar no Rodapé da Página -->
+                <div style="margin-top: 40px; text-align: center;">
+                    <a href="admin-login-page.html" class="botao" style="background: #2c3e50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">← Voltar ao Painel</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo"><br><br>
+            <p>© 2025 Terê Verde Online. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 4px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
+</div>
+
+    <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000;
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+            if (!token || !timestampSessao) { window.location.href = "admin-login.html"; return; }
+            const agora = new Date().getTime();
+            const tempoRestante = TEMPO_SESSAO_MS - (agora - parseInt(timestampSessao));
+            if (tempoRestante <= 0) { localStorage.clear(); window.location.href = "admin-login.html"; }
+            else {
+                if (barra) barra.style.setProperty('display', 'flex', 'important');
+                const m = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                document.getElementById("cronometro-sessao").textContent = `(${m}:${s < 10 ? '0' : ''}${s})`;
+            }
+        }
+        function encerrarSessaoAdmin() { localStorage.clear(); window.location.href = "admin-login.html"; }
+        verificarSessaoGlobal();
+        setInterval(verificarSessaoGlobal, 1000);
+    </script>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+        const token = localStorage.getItem("tokenAdmin") || "";
+        const isMaster = localStorage.getItem("isMaster") === "true";
+
+        if (!token || !isMaster) { alert("Acesso negado."); window.location.href = "admin-login-page.html"; }
+
+        async function carregarAdminsMaster() {
+            const container = document.getElementById("lista-admins-painel");
+            try {
+                const res = await fetch(`${API_URL}/admins/`, { headers: { "Authorization": `Bearer ${token}` } });
+                const data = await res.json();
+                container.innerHTML = "";
+                if (!data.admins || data.admins.length === 0) { container.innerHTML = "<p>Nenhum administrador extra cadastrado.</p>"; return; }
+                data.admins.forEach(a => {
+                    const div = document.createElement("div");
+                    div.style.marginBottom = "10px"; div.style.padding = "8px"; div.style.background = "#fff";
+                    div.style.display = "flex"; div.style.justifyContent = "space-between"; div.style.alignItems = "center"; div.style.border = "1px solid #ddd";
+                    const labelTipo = a.is_master ? '(Admin Principal)' : '(Usuário Comum)';
+                    const identificador = a.id || a.username;
+                    div.innerHTML = `
+                        <span><strong>${a.username}</strong> ${labelTipo}</span>
+                        ${!a.is_master ? `<button type="button" onclick="excluirAdmin('${identificador}')" style="background: #c0392b; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Excluir</button>` : ''}
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (e) { container.innerHTML = "<p style='color: red;'>Erro ao carregar administradores.</p>"; }
+        }
+
+        document.getElementById("form-novo-admin").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("novo-admin-user").value.trim();
+            const password = document.getElementById("novo-admin-senha").value.trim();
+            try {
+                const res = await fetch(`${API_URL}/admins/`, {
+                    method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (res.ok) { alert(data.mensagem); document.getElementById("form-novo-admin").reset(); carregarAdminsMaster(); }
+                else { alert(data.erro || "Erro ao criar usuário."); }
+            } catch (e) { alert("Erro de conexão."); }
+        });
+
+        async function excluirAdmin(id) {
+            if (!confirm("Deseja realmente remover este administrador?")) return;
+            try {
+                const res = await fetch(`${API_URL}/admins/`, {
+                    method: "DELETE", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ id })
+                });
+                if (res.ok) { alert("Removido com sucesso!"); carregarAdminsMaster(); }
+                else { const data = await res.json(); alert(data.erro || "Erro ao excluir."); }
+            } catch (e) { alert("Erro de conexão."); }
+        }
+
+        carregarAdminsMaster();
+    </script>
+</body>
+</html>

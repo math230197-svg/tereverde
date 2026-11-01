@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terê Verde Online - PNMMT</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html">
+    <img src="img/tere verde sem fundo.png" alt="Logo Terê Verde Online" class="logo">
+            </a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo">
+                <h2>Parque Natural Municipal Montanhas de Teresópolis</h2>
+            </div>
+        </section>
+
+        <section class="parque-detalhe">
+            <div class="conteudo" >
+                <img src="img/pedra da tartaruga por do sol.jpg" alt="Parque Natural Municipal Montanhas de Teresópolis" class="parque-imagem">
+                
+                <div class="tabs">
+                    <button class="tab-link active" onclick="openTab(event, 'Sobre')">Sobre</button>
+                    <button class="tab-link" onclick="openTab(event, 'Info')">Informações e Condições</button>
+                    <button class="tab-link" onclick="openTab(event, 'Trilhas')">Principais Trilhas</button>
+                </div>
+
+                <div id="Sobre" class="tab-content" style="display: block;">
+                    <h3>Sobre o Parque</h3><br>
+                    <p>Criado em 6 de julho de 2009, com uma área total de 5.335 hectares, o Parque Natural Municipal Montanhas de Teresópolis é uma das maiores unidades de conservação de proteção integral criada por um município, no Estado do Rio de Janeiro.</p><br>
+                    <h4>Biodiversidade</h4>
+                    <p>Apesar de ser municipal, o parque possui importantes remanescentes de Mata Atlântica, abrigando diversas espécies de aves e pequenos mamíferos. Suas trilhas oferecem contato direto com a natureza exuberante.</p>
+                </div>
+
+                <div id="Info" class="tab-content">
+                    <h3>Informações e Condições</h3>
+                    <p><strong>Horário de Funcionamento:</strong> Aberto de terça a domingo, das 8h às 17h</p>
+                    <p><strong>Ingressos:</strong> Entrada gratuita.</p>
+                    <p><strong>Condições Atuais:</strong></p>
+                    <ul class="condicoes">
+                        <li class="aberto">Trilha da Pedra Alpina: ABERTA</li>
+                        <li class="aberto">Trilha da Tartaruga: ABERTA</li>
+                        <li class="fechado">Trilha do Tangará: FECHADA (Devido a fortes chuvas recentes)</li>
+                    </ul>
+
+                    <!-- Seção dinâmica de eventos cadastrados no Back-End para o PNMMT -->
+                    <div id="eventos-pnmmt" style="margin-top: 20px;"></div>
+                </div>
+
+                <div id="Trilhas" class="tab-content">
+                    <h3>Principais Trilhas no PNMMT</h3>
+                    <ul>
+                        <li>Trilha da Pedra da Tartaruga (Fácil)</li>
+                        <li>Trilha da Pedra Alpina (Média)</li>
+                        <li>Trilha do Tangará (Difícl)</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 40px; text-align: center;">
+                    <a href="index.html" class="botao" style="background: #2c3e50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">← Voltar</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo">
+            <p>© 2025 Terê Verde Online. 
+                Todos os direitos reservados. <br>
+                Email: contato.tereverde@email.com <br> Telefone: (21) 99999-9999</p>
+        </div>
+    </footer>
+
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 4px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
+</div>
+
+    <!-- Script da Sessão isolado ANTES do scripts.js para evitar conflitos -->
+    <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000; 
+
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+
+            if (!token || !timestampSessao) {
+                if (barra) barra.style.setProperty('display', 'none', 'important');
+                return;
+            }
+
+            const agora = new Date().getTime();
+            const tempoDecorrido = agora - parseInt(timestampSessao);
+            const tempoRestante = TEMPO_SESSAO_MS - tempoDecorrido;
+
+            if (tempoRestante <= 0) {
+                encerrarSessaoAdmin();
+                alert("Sua sessão de 15 minutos expirou por inatividade.");
+                window.location.href = "admin-login.html";
+            } else {
+                if (barra) barra.style.setProperty('display', 'flex', 'important');
+                const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                const cronometroEl = document.getElementById("cronometro-sessao");
+                if (cronometroEl) {
+                    cronometroEl.textContent = `(${minutos}:${segundos < 10 ? '0' : ''}${segundos})`;
+                }
+            }
+        }
+
+        function encerrarSessaoAdmin() {
+            localStorage.removeItem("tokenAdmin");
+            localStorage.removeItem("adminSessaoTimestamp");
+            window.location.href = "admin-login.html";
+        }
+
+        // Executa IMEDIATAMENTE ao ler o script
+        verificarSessaoGlobal();
+        setInterval(verificarSessaoGlobal, 1000);
+    </script>
+
+    <!-- Scripts originais do parque (Aba e API) -->
+    <script src="JS/scripts.js"></script>
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+
+        async function carregarDadosParque() {
+            try {
+                const resposta = await fetch(`${API_URL}/dados/`);
+                if (!resposta.ok) return;
+                const dados = await resposta.json();
+
+                // Identifica automaticamente se é PETP ou PNMMT pelo título da página
+                const isPETP = document.title.includes("PETP");
+                const siglaParque = isPETP ? "PETP" : "PNMMT";
+
+                const listaCondicoes = document.querySelector("ul.condicoes");
+                if (listaCondicoes && dados.condicoes) {
+                    const condicoesParque = dados.condicoes.filter(item => item.parque === siglaParque);
+                    if (condicoesParque.length > 0) {
+                        listaCondicoes.innerHTML = "";
+                        condicoesParque.forEach(item => {
+                            const li = document.createElement("li");
+                            li.className = item.status;
+                            li.textContent = `${item.nome}: ${item.descricao.toUpperCase()}`;
+                            listaCondicoes.appendChild(li);
+                        });
+                    }
+                }
+
+                const abaInfo = document.getElementById("Info");
+                if (abaInfo && dados.eventos) {
+                    let containerEventos = document.getElementById(`eventos-${siglaParque.toLowerCase()}`);
+                    if (!containerEventos) {
+                        containerEventos = document.createElement("div");
+                        containerEventos.id = `eventos-${siglaParque.toLowerCase()}`;
+                        containerEventos.style.marginTop = "20px";
+                        abaInfo.appendChild(containerEventos);
+                    }
+                    const eventosParque = dados.eventos.filter(ev => ev.parque === siglaParque);
+
+                    if (eventosParque.length > 0) {
+                        let htmlEventos = `<p style="margin-top: 15px;"><strong>Eventos e Temporadas do ${siglaParque}:</strong></p><ul>`;
+                        eventosParque.forEach(ev => {
+                            htmlEventos += `<li><strong>${ev.titulo}</strong> — ${ev.data} (${ev.disponibilidade})</li>`;
+                        });
+                        htmlEventos += `</ul>`;
+                        containerEventos.innerHTML = htmlEventos;
+                    }
+                }
+            } catch (erro) {
+                console.log("Modo estático ativo ou servidor offline.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", carregarDadosParque);
+    </script>
+</body>
+</html>

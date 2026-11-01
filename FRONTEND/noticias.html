@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terê Verde Online - Notícias e Atualizações</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html">
+                <img src="img/tere verde sem fundo.png" alt="Logo Terê Verde Online" class="logo">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="trilhas.html">Trilhas</a></li>
+                    <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                    <li><a href="eventos.html">Eventos</a></li>
+                    <li><a href="noticias.html" class="active">Notícias</a></li>
+                    <li><a href="admin-login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo">
+                <h2>📰 Notícias e Atualizações</h2>
+            </div>
+        </section>
+
+        <section class="conteudo-principal">
+            <div class="conteudo" style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h3>Fique por dentro de tudo o que acontece no ecoturismo de Teresópolis</h3>
+                <p style="margin-bottom: 25px; color: #555;">Acompanhe os avisos oficiais, reaberturas de trilhas e novidades dos parques.</p>
+
+                <!-- Lista dinâmica puxada da API -->
+                <div id="lista-noticias-publicas" style="margin-top: 20px;">
+                    <p>Carregando notícias...</p>
+                </div>
+
+                <!-- Botão de Voltar Padronizado -->
+                <div style="margin-top: 40px; text-align: center;">
+                    <a href="index.html" class="botao" style="background: #2c3e50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">← Voltar ao Início</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo">
+            <p>© 2025 Terê Verde Online. Todos os direitos reservados. <br>Email: contato.tereverde@email.com</p>
+        </div>
+    </footer>
+
+    <!-- Script para carregar as notícias da API -->
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+
+        async function carregarNoticiasPublicas() {
+            const container = document.getElementById("lista-noticias-publicas");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                const dados = await res.json();
+                container.innerHTML = "";
+                
+                if (!dados.atualizacoes || dados.atualizacoes.length === 0) {
+                    container.innerHTML = "<p>Nenhuma notícia publicada no momento.</p>";
+                    return;
+                }
+
+                dados.atualizacoes.forEach(n => {
+                    const card = document.createElement("div");
+                    card.style.background = "#fdfdfd";
+                    card.style.borderLeft = "4px solid #1a9c3d";
+                    card.style.padding = "15px 20px";
+                    card.style.marginBottom = "15px";
+                    card.style.borderRadius = "4px";
+                    card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.05)";
+
+                    card.innerHTML = `
+                        <span style="font-size: 12px; color: #888; font-weight: bold;">📅 ${n.data}</span>
+                        <p style="margin-top: 5px; font-size: 16px; color: #2c3e50;">${n.texto}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (e) {
+                container.innerHTML = "<p style='color: red;'>Erro ao carregar as notícias. Tente novamente mais tarde.</p>";
+            }
+        }
+
+        carregarNoticiasPublicas();
+    </script>
+</body>
+</html>

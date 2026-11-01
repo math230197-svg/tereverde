@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terê Verde Online - Home</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html">
+                <img src="img/tere verde sem fundo.png" alt="Logo Terê Verde Online" class="logo">
+            </a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="banner-principal">
+            <div class="conteudo">
+                <h2>Descubra as belezas naturais de Teresópolis</h2>
+                <p>Informações atualizadas sobre parques, trilhas e eventos. Tudo em um só lugar!</p>
+            </div>
+        </section>
+
+        <section class="parques">
+            <div class="conteudo">
+                <h3>Nossos Parques</h3>
+                <div class="caixa-conteudo">
+                    <!-- 1. Parque Nacional (PARNASO) -->
+                    <div class="caixa">
+                        <img src="img/Amanhecer_no_Hercules_--.jpg" alt="Parque Nacional da Serra dos Órgãos">
+                        <h4>Parque Nacional da Serra dos Órgãos</h4>
+                        <p>O principal destino para montanhismo e trilhas na região.</p>
+                        <a href="parque.html" class="botao">Saiba Mais</a>
+                    </div>
+                    <!-- 2. Parque Estadual dos Três Picos (PETP) -->
+                    <div class="caixa">
+                        <img src="img/Três Picos.jpg" alt="Parque Estadual dos Três Picos">
+                        <h4>Parque Estadual dos Três Picos</h4>
+                        <p>O maior parque estadual do Rio de Janeiro, rico em fauna e flora.</p>
+                        <a href="petp.html" class="botao">Saiba Mais</a>
+                    </div>
+                    <!-- 3. Parque Natural Municipal Montanhas de Teresópolis (PNMMT) -->
+                    <div class="caixa">
+                        <img src="img/Pedra-da-Tartaruga5-1024x576.jpg" alt="Parque Natural Montanhas de Teresópolis">
+                        <h4>Parque Natural Montanhas de Teresópolis</h4>
+                        <p>Unidade de conservação municipal com trilhas e vistas incríveis.</p>
+                        <a href="pnmt.html" class="botao">Saiba Mais</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br><br>
+        <section class="ultimas-noticias-home" style="margin-top: 30px; margin-bottom: 30px;">
+            <div class="conteudo" style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        
+        <!-- Cabeçalho com o título e o botão azul menor e delicado -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="margin: 0; color: #2c3e50;">📰 Últimas Notícias</h3>
+                <a href="noticias.html" class="botao" style="background: #2c3e50; color: #fff; padding: 6px 14px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 13px; display: inline-block;">Ver todas →</a>
+            </div>
+
+        <!-- Container das notícias com espaçamento vertical maior entre os itens -->
+            <div id="lista-atualizacoes-home" style="display: flex; flex-direction: column; gap: 18px;">
+                <p>Carregando notícias...</p>
+            </div>
+
+</section>
+        </section>
+    </main>
+    <footer>
+        <div class="conteudo">
+            <p>© 2025 Terê Verde Online. 
+                Todos os direitos reservados.<br>
+                Email: contato.tereverde@email.com <br> Telefone: (21) 99999-9999</p>
+        </div>
+    </footer>
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 4px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
+</div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+
+        async function carregarAtualizacoesHome() {
+            const ul = document.getElementById("lista-atualizacoes-home");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                if (!res.ok) return;
+                const dados = await res.json();
+                ul.innerHTML = "";
+
+                if (!dados.atualizacoes || dados.atualizacoes.length === 0) {
+                    ul.innerHTML = "<li>Nenhuma atualização recente.</li>";
+                    return;
+                }
+
+                dados.atualizacoes.forEach(u => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `<strong>${u.data}</strong> ${u.texto}`;
+                    ul.appendChild(li);
+                });
+            } catch (e) {
+                ul.innerHTML = "<li><strong>19/10/2025</strong> Trilha da Pedra do Sino reaberta após manutenção.</li>";
+            }
+        }
+
+        // Script de Controle da Sessão (15 minutos)
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000; 
+
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+
+            if (!token || !timestampSessao) {
+                if (barra) barra.style.display = "none";
+                return;
+            }
+
+            const agora = new Date().getTime();
+            const tempoDecorrido = agora - parseInt(timestampSessao);
+            const tempoRestante = TEMPO_SESSAO_MS - tempoDecorrido;
+
+            if (tempoRestante <= 0) {
+                encerrarSessaoAdmin();
+                alert("Sua sessão de 15 minutos expirou por inatividade.");
+                window.location.href = "admin-login.html";
+            } else {
+                if (barra) barra.style.display = "flex";
+                const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                const cronometroEl = document.getElementById("cronometro-sessao");
+                if (cronometroEl) {
+                    cronometroEl.textContent = `(${minutos}:${segundos < 10 ? '0' : ''}${segundos})`;
+                }
+            }
+        }
+
+        function encerrarSessaoAdmin() {
+            localStorage.removeItem("tokenAdmin");
+            localStorage.removeItem("adminSessaoTimestamp");
+            window.location.href = "admin-login.html";
+        }
+
+        setInterval(verificarSessaoGlobal, 1000);
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarAtualizacoesHome();
+            verificarSessaoGlobal();
+        });
+    </script>
+</body>
+</html>

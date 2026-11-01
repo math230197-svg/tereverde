@@ -1,0 +1,82 @@
+{
+  "condicoes": [
+    {
+      "id": "c2",
+      "tipo": "trilha",
+      "parque": "PNMMT",
+      "nome": "Trilha da Pedra da Tartaruga",
+      "status": "aberto",
+      "descricao": "ABERTA (Trilha leve com vistas espetaculares)"
+    },
+    {
+      "id": "c3",
+      "tipo": "trilha",
+      "parque": "PETP",
+      "nome": "Trilha dos Três Picos",
+      "status": "aberto",
+      "descricao": "ABERTA (Subida desafiadora)"
+    },
+    {
+      "id": "c4",
+      "tipo": "cachoeira",
+      "parque": "PARNASO",
+      "nome": "Cachoeira do Véu da Noiva",
+      "status": "aberto",
+      "descricao": "ABERTA (Acessível por trilha de nível médio)"
+    },
+    {
+      "id": "c6",
+      "tipo": "cachoeira",
+      "parque": "PNMMT",
+      "nome": "Cachoeira do Quebra-Frascos",
+      "status": "aberto",
+      "descricao": "ABERTA (Ótima para banho refrescante)"
+    },
+    {
+      "id": "c7",
+      "tipo": "cachoeira",
+      "parque": "PARNASO",
+      "nome": "Poço dois Irmãos",
+      "status": "aberto",
+      "descricao": "ABERTA (Ideal para relaxar)"
+    }
+  ],
+  "eventos": [
+    {
+      "id": "evt_6901f1",
+      "parque": "PARNASO",
+      "titulo": "Festival de Montanhismo",
+      "data": "2026-10-31 até 2026-11-03",
+      "disponibilidade": "Início do Festival de Montanhismo 2026 nesse sábado 31/10."
+    }
+  ],
+  "atualizacoes": [
+    {
+      "id": "upd_6453fd",
+      "data": "21/11/2026",
+      "texto": "Descoberta de novo anfíbio no PARNASO!"
+    },
+    {
+      "id": "upd_1",
+      "data": "19/10/2025",
+      "texto": "Trilha da Pedra do Sino reaberta após manutenção."
+    },
+    {
+      "id": "upd_2",
+      "data": "18/10/2025",
+      "texto": "Temporada de montanha oficialmente encerrada."
+    }
+  ],
+  "admins": [
+    {
+      "username": "admin",
+      "password_hash": "pbkdf2_sha256$1500000$jkljMsxiVoVIr3dMywE4uP$UdnKUphVFv+s3TlHFJTN2AHIj6ZhqP9TR5idyRu4mR0="
+    },
+    {
+      "id": "adm_d2206a",
+      "username": "matheus",
+      "password_hash": "pbkdf2_sha256$1500000$psdd2WF2NvV7swvUsvpCQc$/jgUmHEFT2RF9OevkVO0v+nqoAIOFvo/9S9QaEcmYWM=",
+      "is_master": false
+    }
+  ]
+}

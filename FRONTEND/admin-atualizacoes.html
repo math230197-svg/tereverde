@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Atualizações - Terê Verde Online</title>
+    <link rel="stylesheet" href="CSS/style-adm.css">
+</head>
+<body>
+    <header>
+        <div class="conteudo">
+            <a href="index.html"><img src="img/tere verde sem fundo.png" alt="Logo" class="logo"></a>
+            <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="trilhas.html">Trilhas</a></li>
+                <li><a href="cachoeiras.html">Cachoeiras</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="admin-login.html">Login</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="titulo-pagina">
+            <div class="conteudo"><h2>📰 Publicar e Gerenciar Notícias</h2></div>
+        </section>
+
+        <section class="admin-painel-adm">
+            <div class="conteudo" style="text-align: left; background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <form id="form-nova-atualizacao" style="background: #f4f6f4; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Data (ex: 19/10/2025):</label>
+                        <input type="text" id="upd-data" placeholder="DD/MM/AAAA" required style="width: 100%; padding: 8px;">
+                    </div>
+                    <div class="form-grupo" style="margin-top: 10px;">
+                        <label>Texto da Notícia:</label>
+                        <textarea id="upd-texto" rows="3" placeholder="Ex: Trilha reaberta." required style="width: 100%; padding: 8px;"></textarea>
+                    </div>
+                    <button type="submit" class="botao" style="margin-top: 12px; background: #1a9c3d; border: none; color: #fff; padding: 10px 15px; cursor: pointer; border-radius: 4px;">Publicar Atualização</button>
+                </form>
+
+                <h4>Atualizações Publicadas</h4>
+                <div id="lista-atualizacoes-painel" style="margin-top: 15px;">Carregando...</div>
+
+                <!-- Botão de Voltar no Rodapé da Página -->
+                <div style="margin-top: 40px; text-align: center;">
+                    <a href="admin-login-page.html" class="botao" style="background: #2c3e50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">← Voltar ao Painel</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="conteudo"><br><br>
+            <p>© 2025 Terê Verde Online. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+<!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 12px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold;">Sair</button>
+</div>
+
+    <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000;
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+            if (!token || !timestampSessao) { window.location.href = "admin-login.html"; return; }
+            const agora = new Date().getTime();
+            const tempoRestante = TEMPO_SESSAO_MS - (agora - parseInt(timestampSessao));
+            if (tempoRestante <= 0) { localStorage.clear(); window.location.href = "admin-login.html"; }
+            else {
+                if (barra) barra.style.setProperty('display', 'flex', 'important');
+                const m = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                document.getElementById("cronometro-sessao").textContent = `(${m}:${s < 10 ? '0' : ''}${s})`;
+            }
+        }
+        function encerrarSessaoAdmin() { localStorage.clear(); window.location.href = "admin-login.html"; }
+        verificarSessaoGlobal();
+        setInterval(verificarSessaoGlobal, 1000);
+    </script>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api";
+        const token = localStorage.getItem("tokenAdmin") || "";
+        if (!token) window.location.href = "admin-login.html";
+
+        async function carregarAtualizacoesAdmin() {
+            const container = document.getElementById("lista-atualizacoes-painel");
+            try {
+                const res = await fetch(`${API_URL}/dados/`);
+                const dados = await res.json();
+                container.innerHTML = "";
+                if (!dados.atualizacoes || dados.atualizacoes.length === 0) { container.innerHTML = "<p>Nenhuma atualização publicada.</p>"; return; }
+                dados.atualizacoes.forEach(u => {
+                    const div = document.createElement("div");
+                    div.style.marginBottom = "15px"; div.style.paddingBottom = "12px"; div.style.borderBottom = "1px solid #ddd";
+                    div.innerHTML = `
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="upd-data-${u.id}" value="${u.data}" style="padding: 8px; flex: 1;">
+                            <input type="text" id="upd-texto-${u.id}" value="${u.texto}" style="padding: 8px; flex: 3;">
+                            <button type="button" class="botao" onclick="salvarAtualizacao('${u.id}')" style="padding: 8px 14px; cursor: pointer;">Salvar</button>
+                            <button type="button" onclick="excluirAtualizacao('${u.id}')" style="background: #c0392b; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (e) { container.innerHTML = "<p style='color: red;'>Erro ao carregar.</p>"; }
+        }
+
+        document.getElementById("form-nova-atualizacao").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nova = { data: document.getElementById("upd-data").value.trim(), texto: document.getElementById("upd-texto").value.trim() };
+            const res = await fetch(`${API_URL}/atualizacoes/`, {
+                method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify(nova)
+            });
+            if (res.ok) { alert("Atualização publicada com sucesso!"); document.getElementById("form-nova-atualizacao").reset(); carregarAtualizacoesAdmin(); }
+            else { alert("Erro ao publicar."); }
+        });
+
+        async function salvarAtualizacao(id) {
+            const data = document.getElementById(`upd-data-${id}`).value;
+            const texto = document.getElementById(`upd-texto-${id}`).value;
+            const res = await fetch(`${API_URL}/atualizacoes/`, {
+                method: "PUT", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify({ id, data, texto })
+            });
+            if (res.ok) { alert("Atualização editada com sucesso!"); carregarAtualizacoesAdmin(); } else { alert("Erro ao editar."); }
+        }
+
+        async function excluirAtualizacao(id) {
+            if (!confirm("Deseja remover esta atualização?")) return;
+            const res = await fetch(`${API_URL}/atualizacoes/`, {
+                method: "DELETE", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) { alert("Atualização removida com sucesso!"); carregarAtualizacoesAdmin(); } else { alert("Erro ao excluir."); }
+        }
+
+        carregarAtualizacoesAdmin();
+    </script>
+</body>
+</html>
