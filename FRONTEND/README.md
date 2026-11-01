@@ -71,9 +71,8 @@ Este é um projeto de front-end estático. Não é necessário nenhum servidor, 
 
 Você pode visualizar a versão publicada deste projeto diretamente no GitHub Pages através do seguinte link:
 
-[Terê Verde Online](https://projetomvp15-blip.github.io/MVP-Tere-Verde/index.html)
+[Terê Verde Online](https://math230197-svg.github.io/tereverde/FRONTEND/index.html)
 
-[Acesso Administrador](https://projetomvp15-blip.github.io/MVP-Tere-Verde/admin-login-page.html)
 
 ---
 
