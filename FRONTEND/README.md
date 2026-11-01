@@ -1,6 +1,6 @@
 # 🌲 MVP Front-End: Terê Verde Online
 
-![Logo do Projeto](/FRONTEND/img/LOGO20%FINAL20%SEMFUNDO20%menor.png)
+![Logo do Projeto](/FRONTEND/img/LOGO%20FINAL%20SEM%20FUNDO%20menor.png)
 
 Este projeto é um MVP (Minimum Viable Product) de front-end desenvolvido como parte da discplina MVP FRONT-END DEVELOPMENT do curso de Análise e Desenvolvimento de Sistemas. O objetivo é criar uma plataforma digital que centraliza informações turísticas (trilhas, cachoeiras, eventos e condições) sobre as três principais unidades de conservação de Teresópolis, RJ.
 
