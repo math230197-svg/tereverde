@@ -147,7 +147,6 @@
             const dataInicio = document.getElementById("data-inicio").value;
             const dataFim = document.getElementById("data-fim").value;
             const observacao = document.getElementById("observacao").value || "Aberto ao público";
-
             const periodoData = dataFim 
             ? `${dataInicio.split('-').reverse().join('/')} até ${dataFim.split('-').reverse().join('/')}` 
             : dataInicio.split('-').reverse().join('/');
