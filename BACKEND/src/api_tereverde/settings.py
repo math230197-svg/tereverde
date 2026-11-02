@@ -22,6 +22,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'api_tereverde.urls'
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://math230197-svg.github.io",
+]
+
 # Banco auxiliar mínimo para utilitários internos do Django; dados principais ficam no MongoDB
 DATABASES = {
     'default': {
