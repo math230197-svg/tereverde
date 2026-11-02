@@ -1,4 +1,4 @@
-const API_URL = "https://tereverde.onrender.com";
+const API_URL = "https://tereverde.onrender.com/api";
 
 // 1. Função das Abas (Mantém o funcionamento das páginas dos parques)
 function openTab(evt, tabName) {
