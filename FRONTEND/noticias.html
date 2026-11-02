@@ -63,7 +63,7 @@
         async function carregarNoticiasPublicas() {
             const container = document.getElementById("lista-noticias-publicas");
             try {
-                const res = await fetch(`${API_URL}/dados/`);
+                const res = await fetch(`${API_URL}/api/dados/`);
                 const dados = await res.json();
                 container.innerHTML = "";
                 
