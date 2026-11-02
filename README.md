@@ -79,6 +79,12 @@ Abaixo estão as rotas principais utilizadas para a comunicação com a interfac
 * **`POST /api/dados/`**: Cadastra uma nova atualização no sistema (restrito a administradores).
 * **`DELETE /api/dados/{id}`**: Exclui uma atualização específica.
 
+## Live Demo
+
+Live demo hospedada no Github Pages e banco de dados no Render (servidor demora cerca de 50 segundos para iniciar).
+
+[Terê Verde Online](https://math230197-svg.github.io/tereverde/FRONTEND/index.html)
+
 ## 🛡️ Notas de Segurança e CORS
 
 O back-end está configurado para aceitar requisições de origens específicas (CORS). Se o front-end for hospedado no GitHub Pages, certifique-se de adicionar a URL pública do repositório front-end (`https://math230197-svg.github.io/tereverde`) na lista de origens permitidas (`ALLOWED_HOSTS` / `CORS_ALLOWED_ORIGINS`) nas configurações da API antes do deploy em produção.
