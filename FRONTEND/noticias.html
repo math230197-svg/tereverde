@@ -67,6 +67,28 @@
     <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
 </div>
 
+     <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000;
+        function verificarSessaoGlobal() {
+            const token = localStorage.getItem("tokenAdmin");
+            const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
+            const barra = document.getElementById("barra-sessao-admin");
+            if (!token || !timestampSessao) { window.location.href = "admin-login.html"; return; }
+            const agora = new Date().getTime();
+            const tempoRestante = TEMPO_SESSAO_MS - (agora - parseInt(timestampSessao));
+            if (tempoRestante <= 0) { localStorage.clear(); window.location.href = "admin-login.html"; }
+            else {
+                if (barra) barra.style.setProperty('display', 'flex', 'important');
+                const m = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                document.getElementById("cronometro-sessao").textContent = `(${m}:${s < 10 ? '0' : ''}${s})`;
+            }
+        }
+        function encerrarSessaoAdmin() { localStorage.clear(); window.location.href = "admin-login.html"; }
+        verificarSessaoGlobal();
+        setInterval(verificarSessaoGlobal, 1000);
+    </script>
+
     <!-- Script para carregar as notícias da API -->
     <script>
         const API_URL = "https://tereverde.onrender.com/api";
