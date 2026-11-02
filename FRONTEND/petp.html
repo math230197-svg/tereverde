@@ -150,7 +150,7 @@
 
         async function carregarDadosParque() {
             try {
-                const resposta = await fetch(`${API_URL}/api/dados/`);
+                const resposta = await fetch(`${API_URL}/dados/`);
                 if (!resposta.ok) return;
                 const dados = await resposta.json();
 
