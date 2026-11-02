@@ -81,7 +81,7 @@
             const filtroParque = document.getElementById("parque").value;
 
             try {
-                const res = await fetch(`${API_URL}/dados/`);
+                const res = await fetch(`${API_URL}/api/dados/`);
                 if (!res.ok) throw new Error("Erro na API");
                 const dados = await res.json();
 
