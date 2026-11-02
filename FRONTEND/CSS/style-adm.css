@@ -264,12 +264,16 @@ footer .conteudo p {
 /* Botão de Voltar */
 .botao-voltar {
     display: inline-block;
-    margin-top: 30px;
-    color: #555;
+    background-color: #007bff;
+    color: #ffffff !important;
+    padding: 10px 20px;
     text-decoration: none;
+    border-radius: 5px;
     font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
 }
 
 .botao-voltar:hover {
-    color: #0a4a1b;
-}
+    background-color: #0056b3;
+    color: #ffffff;
