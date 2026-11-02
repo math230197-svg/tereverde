@@ -55,6 +55,17 @@
             <p>© 2025 Terê Verde Online. Todos os direitos reservados. <br>Email: contato.tereverde@email.com</p>
         </div>
     </footer>
+    
+    <!-- Componente Global de Sessão Atualizado -->
+<div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
+    <span style="font-size: 16px;">👤</span>
+    <div>
+        <strong style="color: #1a9c3d;">Admin</strong> 
+        <span id="cronometro-sessao" style="color: #1a9c3d; font-weight: bold; margin-left: 5px; font-family: monospace; font-size: 14px;">(15:00)</span>
+    </div>
+    <a href="admin-login-page.html" style="color: #2c3e50; text-decoration: none; font-weight: bold; margin-left: 2px; padding: 2px 6px; border: 1px solid #ccc; border-radius: 4px;" title="Painel">Painel</a>
+    <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
+</div>
 
     <!-- Script para carregar as notícias da API -->
     <script>
