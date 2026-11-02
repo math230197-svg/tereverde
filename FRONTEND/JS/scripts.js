@@ -53,7 +53,7 @@ async function carregarDadosDoBackend() {
 
             let htmlEventos = `<p><strong>Eventos e Temporadas Ativas:</strong></p><ul>`;
             dados.eventos.forEach(ev => {
-                htmlEventos += `<li><strong>[${ev.parque}] ${ev.titulo}</strong> — Data: ${ev.data} (${ev.disponibilidade})</li>`;
+                htmlEventos += `<li><strong>[${ev.parque}] ${ev.titulo}</strong> – Data: ${ev.data.split('-').reverse().join('/')} (${ev.disponibilidade})</li>`;
             });
             htmlEventos += `</ul>`;
             containerEventos.innerHTML = htmlEventos;
