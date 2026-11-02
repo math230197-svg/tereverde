@@ -103,7 +103,7 @@
         async function carregarAtualizacoesHome() {
             const ul = document.getElementById("lista-atualizacoes-home");
             try {
-                const res = await fetch(`${API_URL}/dados/`);
+                const res = await fetch(`${API_URL}/api/dados/`);
                 if (!res.ok) return;
                 const dados = await res.json();
                 ul.innerHTML = "";
