@@ -278,3 +278,8 @@ footer .conteudo p {
     background-color: #0056b3;
     color: #ffffff;
 }
+
+/* Mantém o rodapé sempre ancorado no fim da página */
+footer {
+    margin-top: auto;
+}
