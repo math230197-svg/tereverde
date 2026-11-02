@@ -148,7 +148,7 @@
             const dataFim = document.getElementById("data-fim").value;
             const observacao = document.getElementById("observacao").value || "Aberto ao público";
 
-            const periodoData = dataFim ? `${dataInicio} até ${dataFim}` : dataInicio;
+            const periodoData = dataFim ? `${dataInicio.split('-').reverse().join('/')} até ${dataFim.split('-').reverse().join('/')}` : dataInicio.split('-').reverse().join('/');
 
             try {
                 const res = await fetch(`${API_URL}/eventos/`, {
