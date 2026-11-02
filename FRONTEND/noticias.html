@@ -56,7 +56,7 @@
         </div>
     </footer>
     
-    <!-- Componente Global de Sessão Atualizado -->
+<!-- Componente Global de Sessão Atualizado -->
 <div id="barra-sessao-admin" style="display: none; position: fixed; top: 15px; right: 15px; background: #ffffff; color: #2c3e50; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #dcdcdc; align-items: center; gap: 12px; font-family: sans-serif;">
     <span style="font-size: 16px;">👤</span>
     <div>
@@ -67,24 +67,46 @@
     <button onclick="encerrarSessaoAdmin()" style="background: #e74c3c; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Sair</button>
 </div>
 
-     <script>
-        const TEMPO_SESSAO_MS = 15 * 60 * 1000;
+    <!-- Script da Sessão isolado ANTES do scripts.js para evitar conflitos -->
+    <script>
+        const TEMPO_SESSAO_MS = 15 * 60 * 1000; 
+
         function verificarSessaoGlobal() {
             const token = localStorage.getItem("tokenAdmin");
             const timestampSessao = localStorage.getItem("adminSessaoTimestamp");
             const barra = document.getElementById("barra-sessao-admin");
-            if (!token || !timestampSessao) { window.location.href = "admin-login.html"; return; }
+
+            if (!token || !timestampSessao) {
+                if (barra) barra.style.setProperty('display', 'none', 'important');
+                return;
+            }
+
             const agora = new Date().getTime();
-            const tempoRestante = TEMPO_SESSAO_MS - (agora - parseInt(timestampSessao));
-            if (tempoRestante <= 0) { localStorage.clear(); window.location.href = "admin-login.html"; }
-            else {
+            const tempoDecorrido = agora - parseInt(timestampSessao);
+            const tempoRestante = TEMPO_SESSAO_MS - tempoDecorrido;
+
+            if (tempoRestante <= 0) {
+                encerrarSessaoAdmin();
+                alert("Sua sessão de 15 minutos expirou por inatividade.");
+                window.location.href = "admin-login.html";
+            } else {
                 if (barra) barra.style.setProperty('display', 'flex', 'important');
-                const m = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((tempoRestante % (1000 * 60)) / 1000);
-                document.getElementById("cronometro-sessao").textContent = `(${m}:${s < 10 ? '0' : ''}${s})`;
+                const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                const cronometroEl = document.getElementById("cronometro-sessao");
+                if (cronometroEl) {
+                    cronometroEl.textContent = `(${minutos}:${segundos < 10 ? '0' : ''}${segundos})`;
+                }
             }
         }
-        function encerrarSessaoAdmin() { localStorage.clear(); window.location.href = "admin-login.html"; }
+
+        function encerrarSessaoAdmin() {
+            localStorage.removeItem("tokenAdmin");
+            localStorage.removeItem("adminSessaoTimestamp");
+            window.location.href = "admin-login.html";
+        }
+
+        // Executa IMEDIATAMENTE ao ler o script
         verificarSessaoGlobal();
         setInterval(verificarSessaoGlobal, 1000);
     </script>
