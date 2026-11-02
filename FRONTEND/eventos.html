@@ -67,7 +67,7 @@
         async function carregarEventosPublicos() {
             const container = document.getElementById("container-eventos-publicos");
             try {
-                const resposta = await fetch(`${API_URL}/dados/`);
+                const resposta = await fetch(`${API_URL}/api/dados/`);
                 if (!resposta.ok) throw new Error("Erro na API");
                 const dados = await resposta.json();
 
